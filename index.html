@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Leonida Collective — an independent GTA VI community hub. Explore the world, find your next ride, and uncover every corner together.">
+<meta name="theme-color" content="#07070d">
+<meta property="og:title" content="Leonida Collective · Your next obsession">
+<meta property="og:description" content="An independent GTA VI community hub. Explore Leonida together.">
+<meta property="og:type" content="website">
+<title>Leonida Collective · Your next obsession</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   LEONIDA COLLECTIVE — Vice City inspired theme
+   ============================================================ */
+:root{
+  color-scheme:dark;
+  --pink:#ff2d7e;
+  --pink-soft:#ff7aa8;
+  --orange:#ff9d5c;
+  --cyan:#5fe3d0;
+  --gold:#f7c66b;
+  --ink:#07070d;
+  --ink-2:#0b0b14;
+  --panel:#111019;
+  --panel-2:#16141f;
+  --muted:#9d9ab2;
+  --muted-2:#6f6c84;
+  --text:#f6f4fb;
+  --line:#ffffff14;
+  --line-strong:#ffffff2a;
+  --glow:#ff2d7e;
+  --sun:linear-gradient(105deg,#ff2d7e 0%,#ff6d6d 45%,#ff9d5c 100%);
+  --radius:16px;
+  --maxw:1240px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+::selection{background:var(--pink);color:#fff}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:15px;line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;background:none;border:0;color:inherit}
+button,a,input,select{outline-offset:4px}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:4px}
+img,svg{max-width:100%}
+
+/* --- Film grain + vignette overlays (fixed, non-interactive) --- */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:40}
+.fx.grain{opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.fx.vignette{background:radial-gradient(130% 100% at 50% 0%,transparent 55%,#00000070 100%);z-index:1}
+
+/* --- Typography helpers --- */
+.display{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.01em;text-transform:uppercase;line-height:.92}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--pink-soft)}
+.gradient-text{background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{max-width:var(--maxw);margin:auto;padding:0 32px}
+
+/* --- Scroll progress --- */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:100%;transform:scaleX(0);transform-origin:left;
+  background:var(--sun);z-index:50;pointer-events:none;box-shadow:0 0 18px #ff2d7e88}
+
+/* --- Preloader (zoom-in / dive-into-screen transition) --- */
+#loader{position:fixed;inset:0;z-index:100;background:var(--ink);display:grid;place-items:center;
+  perspective:900px;transition:opacity .9s var(--ease),visibility .9s}
+#loader .loader-inner{text-align:center;transform-origin:center;will-change:transform,opacity;
+  animation:loader-in 1.1s var(--ease) both}
+/* On exit: rush the whole lockup toward the viewer and fade — feels like diving into the page */
+#loader.done{opacity:0;visibility:hidden}
+#loader.done .loader-inner{animation:loader-dive 1s var(--ease) forwards}
+.loader-vi{font-family:'Anton',sans-serif;font-size:clamp(90px,22vw,230px);line-height:.8;letter-spacing:-.04em;
+  background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 10px 60px #ff2d7e55)}
+.loader-bar{width:min(240px,60vw);height:3px;margin:26px auto 0;background:#ffffff18;border-radius:3px;overflow:hidden}
+.loader-bar i{display:block;height:100%;width:0;background:var(--sun);animation:load 1.5s var(--ease) forwards}
+.loader-label{margin-top:14px;font-size:10px;letter-spacing:.4em;color:var(--muted-2);text-transform:uppercase}
+@keyframes load{to{width:100%}}
+/* Entry: the "VI" lockup eases up from deep in the scene */
+@keyframes loader-in{from{opacity:0;transform:scale(.55) translateZ(-260px)}to{opacity:1;transform:none}}
+/* Exit: scale way up and push through the screen */
+@keyframes loader-dive{to{opacity:0;transform:scale(5.5) translateZ(420px)}}
+
+/* --- Header --- */
+header{position:sticky;top:0;z-index:30;border-bottom:1px solid transparent;
+  background:#07070d00;backdrop-filter:blur(0px);transition:background .35s,border-color .35s,backdrop-filter .35s}
+header.scrolled{background:#07070dd9;border-color:var(--line);backdrop-filter:blur(20px) saturate(140%)}
+.bar{max-width:var(--maxw);margin:auto;padding:16px 32px;display:flex;align-items:center;gap:30px}
+.logo{display:flex;flex-direction:column;line-height:.9}
+.logo b{font-family:'Anton',sans-serif;font-size:21px;letter-spacing:.02em}
+.logo em{font-style:normal;color:var(--pink);font-size:11px;letter-spacing:.42em;margin-top:3px}
+nav{display:flex;gap:28px;margin-left:auto}
+nav a{font-size:13px;font-weight:600;color:#c7c4d6;position:relative;padding:4px 0;transition:color .25s}
+nav a::after{content:'';position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--pink);transition:right .3s var(--ease)}
+nav a:hover,nav a[aria-current]{color:#fff}
+nav a:hover::after,nav a[aria-current]::after{right:0}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;
+  padding:11px 20px;font-weight:700;font-size:14px;color:#fff;background:#ffffff0a;
+  transition:transform .3s var(--ease),box-shadow .3s,background .3s,border-color .3s;white-space:nowrap}
+.btn:hover{transform:translateY(-3px);background:#ffffff14;border-color:var(--line-strong)}
+.btn.primary{background:var(--sun);border-color:transparent;color:#fff;box-shadow:0 10px 40px #ff2d7e3a}
+.btn.primary:hover{box-shadow:0 16px 54px #ff2d7e5c}
+.btn.ghost{background:transparent}
+
+/* --- Ticker --- */
+.ticker{overflow:hidden;background:linear-gradient(90deg,#1a0a16,#2a0f22);border-block:1px solid var(--line);
+  font-family:'Anton',sans-serif;letter-spacing:.14em;font-size:13px;padding:10px 0;color:#ffb3cf}
+.ticker-track{display:flex;width:max-content;animation:band 40s linear infinite}
+.ticker-track span{white-space:nowrap;padding-right:46px;display:inline-flex;align-items:center;gap:46px}
+.ticker-track .dot{color:var(--pink)}
+@keyframes band{to{transform:translateX(-50%)}}
+.ticker:hover .ticker-track{animation-play-state:paused}
+
+/* --- Hero --- */
+.hero{position:relative;min-height:calc(100svh - 56px);display:flex;align-items:center;overflow:hidden;
+  padding:90px 0 120px;
+  background:
+    radial-gradient(ellipse 60% 50% at 78% 28%,#ff6d6d3a,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 15% 80%,#7a2bd93a,transparent 60%),
+    linear-gradient(160deg,#120a20 0%,#1c1030 40%,#0c0b16 100%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(0deg,var(--ink) 1%,transparent 45%)}
+.skyline{position:absolute;right:-3%;bottom:0;width:70%;height:88%;opacity:.72;will-change:transform}
+.hero .wrap{position:relative;z-index:2;width:100%}
+.hero h1{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(56px,9vw,128px);line-height:.9;letter-spacing:-.01em;margin:22px 0 24px;max-width:15ch}
+.hero h1 .gradient-text{display:inline-block}
+.hero p.lede{max-width:460px;color:#cbc3da;font-size:17px}
+.actions{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.note{color:var(--muted);font-size:12px}
+.hero .note{margin-top:20px}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;
+  font-size:10px;letter-spacing:.4em;text-align:center;display:grid;gap:9px;color:#cfc1d3}
+.scroll-cue .chev{font-size:20px;animation:cue 2s ease-in-out infinite}
+@keyframes cue{50%{transform:translateY(7px)}}
+
+/* --- Stats strip --- */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--radius);
+  background:linear-gradient(180deg,#13111d,#0e0d16);margin-top:-48px;position:relative;z-index:3;overflow:hidden}
+.strip a{padding:26px 24px;border-right:1px solid var(--line);transition:background .3s}
+.strip a:last-child{border-right:0}
+.strip a:hover{background:#ffffff07}
+.strip .icon{color:var(--pink);font-size:20px}
+.strip b{display:flex;align-items:center;gap:11px;font-size:15px;margin-bottom:5px}
+.strip span{font-size:12.5px;color:var(--muted)}
+
+/* --- Section scaffolding --- */
+section{padding:92px 0;scroll-margin-top:92px}
+.heading{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:38px}
+.heading h2{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(32px,4.4vw,56px);line-height:.95;letter-spacing:0;margin:10px 0 0}
+.heading p{color:var(--muted);margin:10px 0 0;max-width:46ch}
+.tag{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  padding:6px 11px;border:1px solid #ff2d7e4d;border-radius:999px;color:#ff9dbd;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+
+/* --- Cards --- */
+.card{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);overflow:hidden;
+  transition:transform .4s var(--ease),border-color .4s,box-shadow .4s}
+.card:hover{transform:translateY(-8px);border-color:#ff2d7e55;box-shadow:0 26px 54px #00000066}
+.art{height:168px;position:relative;overflow:hidden;background:var(--sun)}
+.art.pink{background:linear-gradient(150deg,#2b1440,#9c2f6d 60%,#ff7a6b)}
+.art.blue{background:linear-gradient(140deg,#102730,#2f5f70,#6fb0a8)}
+.art.gold{background:linear-gradient(130deg,#2a1d23,#7d5a44,#e0b574)}
+.art::after{content:attr(data-mark);font-family:'Anton',sans-serif;position:absolute;right:16px;top:-18px;
+  font-size:150px;line-height:1;color:#ffffff1c;letter-spacing:-.08em}
+.art::before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#0c0b1699,transparent 55%)}
+.card .body{padding:24px}
+.card .body h3{margin:14px 0 8px;font-size:21px;line-height:1.25;font-weight:800}
+.card .body p{color:var(--muted);font-size:13.5px}
+.textlink{color:var(--pink-soft);font-weight:700;font-size:13.5px;padding:0;display:inline-flex;gap:6px;
+  transition:gap .25s,color .25s}
+.textlink:hover{color:var(--pink);gap:12px}
+
+/* --- Map --- */
+.maplayout{display:grid;grid-template-columns:290px 1fr;border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;background:var(--panel)}
+.mapaside{padding:26px;background:linear-gradient(180deg,#14121d,#100f18);border-right:1px solid var(--line)}
+.mapaside h3{margin:0 0 14px;font-size:17px;font-weight:800}
+.mapaside label{display:block;margin:11px 0;color:#cbc7d6;font-size:13.5px;cursor:pointer}
+input[type=checkbox]{accent-color:var(--pink);width:15px;height:15px;vertical-align:-2px;margin-right:6px}
+input[type=search]{padding:12px 15px;background:#0a0a12;border:1px solid var(--line-strong);border-radius:10px;
+  color:#fff;width:100%;transition:border-color .25s,box-shadow .25s}
+input[type=search]:focus{border-color:var(--pink);box-shadow:0 0 0 3px #ff2d7e25;outline:none}
+.maparea{position:relative;min-height:470px;overflow:hidden;touch-action:none;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 47px,#ffffff06 48px),
+    repeating-linear-gradient(90deg,#0d1a23 0 47px,#ffffff0a 48px)}
+#map{width:100%;height:470px;display:block;cursor:grab}
+#map:active{cursor:grabbing}
+.maptools{position:absolute;right:16px;top:16px;display:flex;flex-direction:column;gap:7px}
+.maptools button{background:#15131fde;color:#fff;border:1px solid var(--line-strong);border-radius:9px;width:38px;height:38px;
+  font-size:17px;transition:background .25s,transform .2s}
+.maptools button:hover{background:var(--pink);transform:translateY(-2px)}
+.mapbadge{position:absolute;bottom:14px;left:16px;background:#0a0a14e0;padding:7px 12px;border-radius:8px;
+  font-size:10px;letter-spacing:.08em;color:#dfc4d5;pointer-events:none;border:1px solid var(--line)}
+.marker{cursor:pointer}
+.marker circle{transition:r .2s,stroke-width .2s}
+.marker:hover circle,.marker:focus circle{stroke:#fff;stroke-width:4}
+#place{margin-top:22px;border-top:1px solid var(--line);padding-top:20px;font-size:13.5px}
+#place h3{margin:0 0 8px}
+
+/* --- Community --- */
+.community{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);padding:48px;
+  display:flex;gap:34px;align-items:center;justify-content:space-between;
+  background:radial-gradient(ellipse at 100% 0%,#8c255855,transparent 60%),linear-gradient(120deg,#17121f,#0f0e17)}
+.community h2{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(30px,4vw,50px);line-height:.95;margin:12px 0}
+.community p{max-width:560px;color:var(--muted)}
+
+/* --- Footer --- */
+footer{padding:46px 0;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;background:var(--ink-2)}
+.footcols{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
+.footcols .logo b{font-size:18px}
+
+/* --- Dialog + toast --- */
+dialog{background:var(--panel-2);color:#fff;border:1px solid var(--line-strong);border-radius:var(--radius);
+  padding:34px;max-width:560px;width:90%}
+dialog::backdrop{background:#000000bb;backdrop-filter:blur(4px)}
+dialog h2{font-size:25px;margin:14px 0}
+.close{float:right;font-size:26px;line-height:1;color:#fff;opacity:.7;transition:opacity .2s}
+.close:hover{opacity:1}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);padding:13px 22px;
+  background:#2a2638;border:1px solid var(--line-strong);border-radius:10px;z-index:60;box-shadow:0 14px 40px #0007}
+#toast:empty{display:none}
+.empty{grid-column:1/-1;color:var(--muted);padding:34px;text-align:center}
+
+/* --- Floating controls --- */
+.motion-toggle{position:fixed;bottom:20px;right:20px;background:#15121eec;color:#dad1df;
+  border:1px solid var(--line-strong);border-radius:999px;padding:9px 15px;font-size:11px;z-index:35;
+  transition:border-color .25s,color .25s}
+.motion-toggle:hover{border-color:var(--pink);color:#fff}
+.backtop{position:fixed;bottom:66px;right:20px;width:40px;height:40px;border-radius:50%;
+  border:1px solid #ff2d7e66;background:#1b1324;color:#fff;z-index:35;transition:transform .25s,background .25s}
+.backtop:hover{background:var(--pink);transform:translateY(-3px)}
+.backtop[hidden]{display:none}
+
+/* ============================================================
+   SCROLL STORY (cinematic pinned reveal)
+   ============================================================ */
+.scroll-story{height:280svh;padding:0;position:relative;isolation:isolate}
+.story-stage{height:100svh;position:sticky;top:0;overflow:hidden;display:grid;place-items:center;background:#0a0a12}
+.story-scene{position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 50% 42%,#b3366655,transparent 62%),
+    repeating-linear-gradient(90deg,transparent 0 79px,#ffffff05 80px),
+    repeating-linear-gradient(0deg,transparent 0 79px,#ffffff05 80px)}
+.story-mark{position:absolute;font-family:'Anton',sans-serif;font-size:clamp(170px,38vw,540px);
+  letter-spacing:-.06em;color:#ff2d7e0d;line-height:1}
+.story-band{position:absolute;width:150%;left:-25%;padding:12px;top:17%;transform:rotate(-7deg);
+  border-block:1px solid #ff2d7e38;color:#ff2d7e66;white-space:nowrap;letter-spacing:.5em;font-size:18px;
+  font-family:'Anton',sans-serif}
+.story-copy{position:relative;text-align:center;max-width:860px;padding:26px;will-change:transform,opacity}
+.story-copy h2{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(46px,7vw,92px);line-height:1.02;margin:22px 0;letter-spacing:-.01em}
+.story-copy p{max-width:540px;margin:0 auto;color:#bbb0c5;font-size:17px}
+.story-copy .btn{margin-top:32px}
+.curtain{position:absolute;top:0;width:50.3%;height:100%;display:flex;align-items:center;justify-content:center;
+  will-change:transform;border:1px solid #ffffff08}
+.curtain.left{left:0;background:linear-gradient(130deg,#1b1228,#09090f)}
+.curtain.right{right:0;background:linear-gradient(230deg,#2a142a,#09090f)}
+.curtain span{font-family:'Anton',sans-serif;font-size:clamp(110px,27vw,360px);line-height:.82;color:#fff;
+  letter-spacing:-.06em;text-shadow:0 6px 60px #ff2d7e38}
+.curtain.right span{color:var(--pink)}
+.story-hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;font-size:10px;
+  letter-spacing:.35em;color:#a79bb1}
+
+/* --- Reveal-on-scroll --- */
+.motion-on .reveal-item{opacity:0;transform:translateY(32px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--delay,0ms)}
+.motion-on .reveal-item.visible{opacity:1;transform:none}
+
+/* --- Reduced / paused motion fallbacks --- */
+.motion-off *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+.motion-off .scroll-story{height:auto}
+.motion-off .story-stage{position:relative;min-height:580px;height:auto;padding:100px 0}
+.motion-off .curtain,.motion-off .story-hint{display:none}
+.motion-off .story-copy{opacity:1!important;transform:none!important}
+.motion-off .skyline{transform:none!important}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:860px){
+  .wrap{padding:0 20px}
+  .bar{padding:14px 20px;gap:14px;flex-wrap:wrap}
+  nav{order:3;width:100%;overflow:auto;gap:22px;margin:0;padding-bottom:2px}
+  .bar>.btn{margin-left:auto}
+  .hero{min-height:calc(100svh - 110px);padding:70px 0 100px}
+  .skyline{width:112%;opacity:.4}
+  .strip{grid-template-columns:1fr 1fr;margin-top:-30px}
+  .strip a:nth-child(2){border-right:0}
+  .strip a:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .grid{grid-template-columns:1fr}
+  .maplayout{grid-template-columns:1fr}
+  .mapaside{border-right:0;border-bottom:1px solid var(--line)}
+  .mapaside label{display:inline-block;margin:10px 14px 0 0}
+  .community{display:block;padding:28px}
+  .community .btn{margin-top:22px}
+  .heading{flex-direction:column;align-items:flex-start}
+  section{padding:60px 0}
+  .scroll-story{height:230svh}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ticker-track,.scroll-cue .chev,.loader-bar i{animation:none}
+  #loader .loader-inner,#loader.done .loader-inner{animation:none;transform:none}
+  .scroll-story{height:auto}
+  .story-stage{position:relative;height:auto;min-height:580px;padding:100px 0}
+  .curtain,.story-hint{display:none}
+  .story-copy{opacity:1!important;transform:none!important}
+  .motion-on .reveal-item{opacity:1;transform:none;transition:none}
+  .skyline{transform:none!important}
+}
+</style>
+</head>
+<body class="motion-on">
+
+<!-- Cinematic preloader -->
+<div id="loader" aria-hidden="true">
+  <div class="loader-inner">
+    <div class="loader-vi">VI</div>
+    <div class="loader-bar"><i></i></div>
+    <div class="loader-label">Entering Leonida</div>
+  </div>
+</div>
+
+<!-- Fixed visual effects -->
+<div class="fx vignette" aria-hidden="true"></div>
+<div class="fx grain" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<!-- Ticker -->
+<div class="ticker" aria-label="Explore. Discover. Connect.">
+  <div class="ticker-track" aria-hidden="true">
+    <span>LEONIDA COLLECTIVE <i class="dot">◆</i> EXPLORE THE WORLD <i class="dot">◆</i> FIND YOUR PEOPLE <i class="dot">◆</i> MAKE YOUR NEXT DISCOVERY <i class="dot">◆</i></span>
+    <span>LEONIDA COLLECTIVE <i class="dot">◆</i> EXPLORE THE WORLD <i class="dot">◆</i> FIND YOUR PEOPLE <i class="dot">◆</i> MAKE YOUR NEXT DISCOVERY <i class="dot">◆</i></span>
+    <span>LEONIDA COLLECTIVE <i class="dot">◆</i> EXPLORE THE WORLD <i class="dot">◆</i> FIND YOUR PEOPLE <i class="dot">◆</i> MAKE YOUR NEXT DISCOVERY <i class="dot">◆</i></span>
+    <span>LEONIDA COLLECTIVE <i class="dot">◆</i> EXPLORE THE WORLD <i class="dot">◆</i> FIND YOUR PEOPLE <i class="dot">◆</i> MAKE YOUR NEXT DISCOVERY <i class="dot">◆</i></span>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="bar">
+    <a class="logo" href="#top" aria-label="Leonida Collective home">
+      <b>LEONIDA</b><em>COLLECTIVE</em>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#discover">Discover</a>
+      <a href="#media">Official media</a>
+      <a href="#atlas">Interactive map</a>
+      <a href="#library">Vehicles &amp; guides</a>
+      <a href="#community">Community</a>
+    </nav>
+    <button class="btn primary" id="join">Join the community ↗</button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <div class="hero" id="home">
+    <svg class="skyline" viewBox="0 0 900 500" aria-hidden="true">
+      <defs>
+        <linearGradient id="sun" x2="0" y2="1">
+          <stop stop-color="#ffb37e"/><stop offset=".5" stop-color="#ff5f8f"/><stop offset="1" stop-color="#b43cae"/>
+        </linearGradient>
+        <pattern id="windows" width="20" height="25" patternUnits="userSpaceOnUse">
+          <rect width="4" height="8" x="6" y="5" fill="#ffb899" opacity=".4"/>
+        </pattern>
+      </defs>
+      <circle cx="590" cy="215" r="140" fill="url(#sun)"/>
+      <path d="M0 500V350h70V280h60v70h40V220h70v280h20V170h70v330h30V290h60v210h35V110h65v390h25V240h70v260h30V190h70v310h25V310h60v190h100" fill="#120f22"/>
+      <path d="M0 500V350h70V280h60v70h40V220h70v280h20V170h70v330h30V290h60v210h35V110h65v390h25V240h70v260h30V190h70v310h25V310h60v190h100" fill="url(#windows)"/>
+      <path d="M700 500Q680 270 740 140M740 140Q650 80 610 160M740 140Q820 50 870 130M740 140Q720 35 670 45M740 140Q800 100 890 190" fill="none" stroke="#0e0d1e" stroke-width="18"/>
+    </svg>
+    <div class="wrap">
+      <span class="eyebrow">Independent · Community driven · Leonida bound</span>
+      <h1 class="display">Your world.<br><span class="gradient-text">Your next chapter.</span></h1>
+      <p class="lede">A home for everything GTA VI. Explore the world, find your next ride, and uncover every corner together.</p>
+      <div class="actions">
+        <a class="btn primary" href="#atlas">Explore the map ↗</a>
+        <a class="btn ghost" href="#discover">Discover the hub ↓</a>
+      </div>
+      <p class="note">Early community build · Map and content previews</p>
+    </div>
+    <a class="scroll-cue" href="#reveal" aria-label="Scroll to the Leonida reveal">
+      <span class="chev" aria-hidden="true">↓</span>SCROLL TO EXPLORE
+    </a>
+  </div>
+
+  <!-- Cinematic scroll story -->
+  <section class="scroll-story" id="reveal" aria-label="Welcome to Leonida">
+    <div class="story-stage">
+      <div class="story-scene" aria-hidden="true"></div>
+      <div class="story-band" aria-hidden="true">LEONIDA · YOUR WORLD · YOUR COMMUNITY · LEONIDA · YOUR WORLD · YOUR COMMUNITY</div>
+      <div class="story-mark" aria-hidden="true">VI</div>
+      <div class="story-copy">
+        <span class="eyebrow">One world. A thousand stories.</span>
+        <h2>Beyond the headlines.<br><span class="gradient-text">Into Leonida.</span></h2>
+        <p>From the first discovery to the last unexplored corner. Your map, your garage, your guides — all in one community.</p>
+        <a class="btn primary" href="#atlas">Find your next discovery ↗</a>
+      </div>
+      <div class="curtain left" aria-hidden="true"><span>L</span></div>
+      <div class="curtain right" aria-hidden="true"><span>N</span></div>
+      <span class="story-hint" aria-hidden="true">KEEP SCROLLING TO EXPLORE ↓</span>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <!-- Stats / quick links strip -->
+    <div class="strip">
+      <a href="#discover"><b><span class="icon">◈</span>Newsroom</b><span>Updates with sources, not guesswork</span></a>
+      <a href="#atlas"><b><span class="icon">⌖</span>Explore Leonida</b><span>Your journey, mapped out</span></a>
+      <a href="#library"><b><span class="icon">◇</span>The garage</b><span>Find your next favourite ride</span></a>
+      <a href="#library"><b><span class="icon">↗</span>Field guides</b><span>Less searching. More playing.</span></a>
+    </div>
+
+    <!-- Discover -->
+    <section id="discover">
+      <div class="heading">
+        <div>
+          <span class="eyebrow">The pulse of the collective</span>
+          <h2>On the <span class="gradient-text">radar.</span></h2>
+          <p>GTA VI announcements from Rockstar, plus clearly attributed games reporting.</p>
+        </div>
+        <span class="tag">Curated news · checked 20 Oct 2026</span>
+      </div>
+      <div class="grid" id="news"></div>
+      <noscript><p>Read GTA VI announcements on <a class="textlink" href="https://www.rockstargames.com/newswire?tag=722">Rockstar Games Newswire ↗</a>.</p></noscript>
+      <p class="note">Selected links, not a live feed. Dates below are publication dates; articles may have newer updates. Summaries by Leonida Collective. Full articles and media belong to their publishers.</p>
+      <div class="actions">
+        <a class="btn" href="https://www.rockstargames.com/newswire?tag=722" target="_blank" rel="noopener noreferrer">Latest Rockstar Newswire ↗</a>
+        <a class="btn ghost" href="https://www.rockstargames.com/VI" target="_blank" rel="noopener noreferrer">Official GTA VI site ↗</a>
+      </div>
+    </section>
+
+    <!-- Official media -->
+    <section id="media" aria-labelledby="media-title">
+      <div class="heading">
+        <div>
+          <span class="eyebrow">From Rockstar Games</span>
+          <h2 id="media-title">Vice City <span class="gradient-text">in motion.</span></h2>
+          <p>Official trailers, screenshots and artwork. Explore the originals at the source.</p>
+        </div>
+        <span class="tag">Official media · Rockstar Games</span>
+      </div>
+      <article class="card">
+        <div id="trailer-player" style="aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(135deg,#28112e,#101f2b);padding:20px">
+          <button class="btn primary" id="load-trailer" type="button">Load official Trailer 2 ▶</button>
+        </div>
+        <div class="body">
+          <span class="tag">Official trailer · archive</span>
+          <h3>Grand Theft Auto VI — Trailer 2</h3>
+          <p class="note">Rockstar Games · <time datetime="2025-05-06">6 May 2025</time></p>
+          <p>Loading the player connects to YouTube. Playback starts only when you press play. For the newest trailers and clips, visit Rockstar’s video library.</p>
+          <a class="textlink" href="https://www.youtube.com/watch?v=VQRLujxTm3c" target="_blank" rel="noopener noreferrer">Watch on Rockstar’s YouTube channel ↗</a>
+        </div>
+      </article>
+      <div class="grid" style="margin-top:22px">
+        <article class="card"><div class="art blue" data-mark="VI" aria-hidden="true"></div><div class="body">
+          <span class="tag">Official screenshots</span><h3>Explore Leonida</h3>
+          <p>Browse Rockstar’s original screenshots of the characters, city and beyond.</p>
+          <a class="textlink" href="https://www.rockstargames.com/VI/media/screenshots" target="_blank" rel="noopener noreferrer">Open Rockstar’s screenshot gallery ↗</a>
+        </div></article>
+        <article class="card"><div class="art pink" data-mark="VI" aria-hidden="true"></div><div class="body">
+          <span class="tag">Official artwork</span><h3>Art from the source</h3>
+          <p>Find official character artwork and wallpapers in Rockstar’s media collection.</p>
+          <a class="textlink" href="https://www.rockstargames.com/VI/media/artwork-wallpapers" target="_blank" rel="noopener noreferrer">Open Rockstar’s artwork gallery ↗</a>
+        </div></article>
+        <article class="card"><div class="art gold" data-mark="VI" aria-hidden="true"></div><div class="body">
+          <span class="tag">Trailers &amp; clips</span><h3>See what’s new</h3>
+          <p>Watch the latest official trailers and explore character clips directly at Rockstar.</p>
+          <a class="textlink" href="https://www.rockstargames.com/VI/media/videos" target="_blank" rel="noopener noreferrer">Open Rockstar’s video library ↗</a>
+        </div></article>
+      </div>
+      <p class="note">GTA VI footage, screenshots and artwork © Rockstar Games. Gallery links open Rockstar’s website; decorative card backgrounds are not game screenshots.</p>
+    </section>
+
+    <!-- Atlas / map -->
+    <section id="atlas">
+      <div class="heading">
+        <div>
+          <span class="eyebrow">Leave no corner unexplored</span>
+          <h2>The Leonida <span class="gradient-text">atlas.</span></h2>
+          <p>Filter locations, drag to explore, and save your discoveries.</p>
+        </div>
+        <span class="tag">Concept map · fictional coordinates</span>
+      </div>
+      <div class="maplayout">
+        <aside class="mapaside">
+          <h3>Find your next stop</h3>
+          <input id="mapsearch" type="search" aria-label="Search map markers" placeholder="Search locations…">
+          <div id="filters"></div>
+          <label><input id="foundonly" type="checkbox"> Show saved discoveries</label>
+          <p class="note" id="count" aria-live="polite"></p>
+          <div id="place">Select a marker to view its details.
+            <p class="note">All markers are demonstration data. This is not the official GTA VI map.</p>
+          </div>
+        </aside>
+        <div class="maparea">
+          <svg id="map" viewBox="0 0 800 500" aria-label="Illustrative interactive map of fictional demonstration locations">
+            <g id="world">
+              <path d="M170 20L440 0 580 70 560 145 640 210 575 280 650 360 550 470 430 495 370 425 265 405 220 315 120 270 150 200 110 120Z" fill="#20353a" stroke="#54817a" stroke-width="3"/>
+              <path d="M200 100L420 90 500 190 450 300 550 400M140 250L450 300 370 425M265 405L300 170 550 140M300 170L500 190M450 300L575 280" fill="none" stroke="#bdaf8e" stroke-width="5" opacity=".5"/>
+              <path d="M290 190h170v150H290z" fill="#3a4a4f"/>
+              <path d="M310 190v150m35-150v150m35-150v150m35-150v150m-125-120h170m-170 35h170m-170 35h170" stroke="#85908b" opacity=".55" fill="none"/>
+              <text x="350" y="365" fill="#a2bbb8" font-size="13" letter-spacing="5">DEMO CITY</text>
+              <text x="270" y="65" fill="#90aaa4" font-size="12" letter-spacing="4">NORTHERN WILDS</text>
+              <text x="600" y="440" fill="#73929d" font-size="12" letter-spacing="4">OCEAN</text>
+              <g id="markers"></g>
+            </g>
+          </svg>
+          <div class="maptools">
+            <button id="zoomin" aria-label="Zoom in">+</button>
+            <button id="zoomout" aria-label="Zoom out">−</button>
+            <button id="reset" aria-label="Reset map">↺</button>
+          </div>
+          <span class="mapbadge">ILLUSTRATIVE MAP · Drag to pan · Use + / − to zoom</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Library -->
+    <section id="library">
+      <div class="heading">
+        <div>
+          <span class="eyebrow">Build your knowledge</span>
+          <h2>The <span class="gradient-text">field library.</span></h2>
+          <p>Vehicles, mission help, and places worth the detour.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap">
+        <input style="flex:1;min-width:200px" type="search" id="search" placeholder="Search the library…" aria-label="Search library">
+        <select id="category" class="btn" aria-label="Library category" style="padding-right:16px">
+          <option value="All">All categories</option>
+          <option>Vehicles</option>
+          <option>Mission help</option>
+          <option>POI</option>
+        </select>
+      </div>
+      <div id="cards" class="grid" aria-live="polite"></div>
+    </section>
+
+    <!-- Community -->
+    <section id="community">
+      <div class="community">
+        <div>
+          <span class="eyebrow">Better with your people</span>
+          <h2>Make Leonida <span class="gradient-text">yours.</span></h2>
+          <p>Share discoveries, swap stories, and help build a community guide to the next chapter. Your collective starts here.</p>
+          <span class="note">Community links will be added when the server is ready.</span>
+        </div>
+        <button class="btn primary" id="communitybutton">Community information ↗</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap footcols">
+    <div class="logo"><b>LEONIDA</b><em style="color:var(--pink)">COLLECTIVE</em></div>
+    <div style="max-width:620px;text-align:right">
+      Independent fan community. Not affiliated with Rockstar Games or Take-Two Interactive.<br>
+      Prototype: illustrative map and library placeholders. News links credit their original publishers. Discoveries are saved on this browser only.
+    </div>
+  </div>
+</footer>
+
+<dialog id="detail">
+  <button class="close" aria-label="Close dialog">×</button>
+  <span class="tag" id="detailtag"></span>
+  <h2 id="detailtitle"></h2>
+  <p id="detailbody"></p>
+</dialog>
+
+<div id="toast" role="status"></div>
+<button class="motion-toggle" id="motion" aria-pressed="false">Pause motion</button>
+<button class="backtop" id="backtop" aria-label="Back to top" hidden>↑</button>
+
+<script>
+const $=s=>document.querySelector(s);
+
+/* ---- Preloader ---- */
+window.addEventListener('load',()=>{setTimeout(()=>$('#loader').classList.add('done'),1500)});
+setTimeout(()=>$('#loader').classList.add('done'),2600); // safety fallback
+
+/* ---- Detail modal ---- */
+const modal=$('#detail');
+function openDetail(tag,title,body){$('#detailtag').textContent=tag;$('#detailtitle').textContent=title;$('#detailbody').textContent=body;modal.showModal()}
+$('.close').onclick=()=>modal.close();
+modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
+function community(){openDetail('Community setup','Your community belongs here','Add your Discord invite and social links in the site configuration before launch. No server has been connected to this prototype.')}
+$('#join').onclick=community;$('#communitybutton').onclick=community;
+
+/* ---- Official media: load the external player only on request ---- */
+$('#load-trailer').onclick=()=>{
+  const player=document.createElement('iframe');
+  player.src='https://www.youtube-nocookie.com/embed/VQRLujxTm3c';
+  player.title='Grand Theft Auto VI Trailer 2 — Rockstar Games';
+  player.allow='encrypted-media; picture-in-picture; fullscreen';
+  player.allowFullscreen=true;
+  player.referrerPolicy='strict-origin-when-cross-origin';
+  player.style.cssText='width:100%;height:100%;border:0;aspect-ratio:16/9';
+  const container=$('#trailer-player');container.style.padding='0';
+  container.replaceChildren(player);player.focus();
+};
+
+/* ---- News cards ---- */
+// Curated links: update the checked date above when reviewing this list.
+const news=[
+  {
+    "kind": "Official announcement",
+    "title": "Watch the GTA VI launch trailer",
+    "summary": "Rockstar has published its launch trailer. Watch it and read the announcement on Newswire.",
+    "source": "Rockstar Games",
+    "date": "2026-10-15",
+    "url": "https://www.rockstargames.com/newswire/article/517572321a549a/watch-the-grand-theft-auto-vi-launch-trailer"
+  },
+  {
+    "kind": "Official announcement",
+    "title": "Inside the music of GTA VI",
+    "summary": "Rockstar introduces the game’s in-game radio stations. Explore the announcement and official music details.",
+    "source": "Rockstar Games",
+    "date": "2026-10-08",
+    "url": "https://www.rockstargames.com/newswire/article/o3982oa93a23k4/the-music-of-grand-theft-auto-vi-in-game-radio-stations"
+  },
+  {
+    "kind": "Games reporting · archive",
+    "title": "How the November 2026 date was announced",
+    "summary": "GameSpot’s report on the November 2025 delay announcement, with comments from Rockstar and Take-Two. Historical context; check Rockstar for current release details.",
+    "source": "GameSpot · Eddie Makuch",
+    "date": "2025-11-06",
+    "url": "https://www.gamespot.com/articles/gta-6-delayed-to-november-2026/1100-6536012/"
+  }
+];
+const artClass=['pink','blue','gold'],artMark=['VI','LC','VC'];
+function card(item,i){
+  const a=document.createElement('article');a.className='card';
+  const art=document.createElement('div');art.className='art '+artClass[i%3];art.setAttribute('data-mark',artMark[i%3]);art.setAttribute('aria-hidden','true');
+  const body=document.createElement('div');body.className='body';
+  const tag=document.createElement('span');tag.className='tag';tag.textContent=item[0];
+  const h=document.createElement('h3');h.textContent=item[1];
+  const p=document.createElement('p');p.textContent=item[2];
+  const b=document.createElement('button');b.className='textlink';b.textContent='Explore →';b.onclick=()=>openDetail(item[0],item[1],item[3]);
+  body.append(tag,h,p,b);a.append(art,body);return a;
+}
+function newsCard(item,i){
+  const article=card([item.kind,item.title,item.summary,''],i);
+  const body=article.querySelector('.body');
+  const meta=document.createElement('p');meta.className='note';
+  const date=document.createElement('time');date.dateTime=item.date;
+  date.textContent=new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(item.date+'T00:00:00Z'));
+  meta.append(item.source+' · ',date);
+  body.insertBefore(meta,body.querySelector('h3'));
+  const link=document.createElement('a');link.className='textlink';
+  link.href=item.url;link.target='_blank';link.rel='noopener noreferrer';
+  link.textContent='Read at '+item.source.split(' · ')[0]+' ↗';
+  link.setAttribute('aria-label',item.title+' — '+item.source+' (opens in a new tab)');
+  body.querySelector('button').replaceWith(link);
+  return article;
+}
+news.forEach((item,i)=>$('#news').append(newsCard(item,i)));
+
+/* ---- Library ---- */
+const library=[
+  ['Vehicles','The vehicle index','Find rides by class, performance, and where to get them.','Planned catalogue: vehicle name, class, location, price, customization, and verified performance data. No unverified GTA VI vehicles or statistics are presented here.'],
+  ['Mission help','A helping hand, when you need it','Spoiler-aware walkthroughs, objectives, and completion tips.','Mission walkthroughs will be added when reliable mission information is available. Each guide should hide story spoilers and distinguish required objectives from optional tasks.'],
+  ['POI','Beyond the main road','Discover landmarks, hidden corners, and useful stops.','Future POI entries will link to real map markers and include location guidance, screenshots, and source attribution. The current map uses fictional demonstration markers.']
+];
+function renderLibrary(){
+  const q=$('#search').value.toLowerCase(),cat=$('#category').value;
+  const rows=library.filter(x=>(cat==='All'||x[0]===cat)&&x.join(' ').toLowerCase().includes(q));
+  $('#cards').replaceChildren(...rows.map(card));
+  if(!rows.length){const p=document.createElement('p');p.className='empty';p.textContent='No matches. Try another search or category.';$('#cards').append(p)}
+}
+$('#search').oninput=renderLibrary;$('#category').onchange=renderLibrary;renderLibrary();
+
+/* ---- Interactive map ---- */
+const types={'Landmarks':'#ff508e','Activities':'#6ae6cc','Collectibles':'#f9cb79'};
+const points=[
+  {id:'a',name:'Coastal lookout',type:'Landmarks',x:525,y:340},
+  {id:'b',name:'Downtown meeting spot',type:'Activities',x:355,y:260},
+  {id:'c',name:'Northern trail',type:'Collectibles',x:310,y:120},
+  {id:'d',name:'Waterside landmark',type:'Landmarks',x:235,y:275},
+  {id:'e',name:'Canal challenge',type:'Activities',x:445,y:230},
+  {id:'f',name:'Island discovery',type:'Collectibles',x:505,y:410}
+];
+let saved=new Set();try{saved=new Set(JSON.parse(localStorage.getItem('leonida-found')||'[]'))}catch{}
+Object.keys(types).forEach(t=>{
+  const label=document.createElement('label'),c=document.createElement('input');
+  c.type='checkbox';c.checked=true;c.value=t;c.onchange=renderMap;label.append(c,' '+t);$('#filters').append(label);
+});
+let selected=null;
+function renderMap(){
+  const active=[...document.querySelectorAll('#filters input:checked')].map(c=>c.value),
+    q=$('#mapsearch').value.toLowerCase(),
+    rows=points.filter(p=>active.includes(p.type)&&p.name.toLowerCase().includes(q)&&(!$('#foundonly').checked||saved.has(p.id)));
+  $('#markers').replaceChildren();
+  rows.forEach(p=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.classList.add('marker');g.setAttribute('tabindex','0');g.setAttribute('role','button');
+    g.setAttribute('aria-label',p.name+(saved.has(p.id)?', discovered':''));
+    const c=document.createElementNS(g.namespaceURI,'circle');
+    for(const [k,v] of Object.entries({cx:p.x,cy:p.y,r:10,fill:saved.has(p.id)?'#fff':types[p.type],stroke:'#0b121a','stroke-width':4}))c.setAttribute(k,v);
+    g.append(c);g.onclick=()=>selectPoint(p);
+    g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPoint(p)}};
+    $('#markers').append(g);
+  });
+  $('#count').textContent=rows.length+' visible · '+saved.size+' of '+points.length+' discovered';
+}
+function selectPoint(p){
+  selected=p;
+  const h=document.createElement('h3');h.textContent=p.name;
+  const para=document.createElement('p');para.textContent=p.type+' · Fictional demo location';
+  const b=document.createElement('button');b.className='btn';b.textContent=saved.has(p.id)?'Unmark discovery':'Mark discovered';
+  b.onclick=()=>{
+    saved.has(p.id)?saved.delete(p.id):saved.add(p.id);
+    try{localStorage.setItem('leonida-found',JSON.stringify([...saved]))}catch{$('#toast').textContent='Browser storage unavailable: progress lasts this session.'}
+    renderMap();selectPoint(p);
+  };
+  $('#place').replaceChildren(h,para,b);
+}
+$('#mapsearch').oninput=renderMap;$('#foundonly').onchange=renderMap;renderMap();
+
+/* ---- Zoom + pan ---- */
+let zoom=1,panX=0,panY=0,drag=null;
+function transform(){$('#world').setAttribute('transform',`translate(${400+panX} ${250+panY}) scale(${zoom}) translate(-400 -250)`)}
+$('#zoomin').onclick=()=>{zoom=Math.min(4,zoom*1.25);transform()};
+$('#zoomout').onclick=()=>{zoom=Math.max(.75,zoom/1.25);transform()};
+$('#reset').onclick=()=>{zoom=1;panX=panY=0;transform()};
+const map=$('#map');
+function coords(e){const p=new DOMPoint(e.clientX,e.clientY);return p.matrixTransform(map.getScreenCTM().inverse())}
+map.onpointerdown=e=>{if(e.target.closest('.marker'))return;const p=coords(e);drag={x:p.x,y:p.y,px:panX,py:panY};map.setPointerCapture(e.pointerId)};
+map.onpointermove=e=>{if(!drag)return;const p=coords(e);panX=drag.px+p.x-drag.x;panY=drag.py+p.y-drag.y;transform()};
+map.onpointerup=map.onpointercancel=()=>drag=null;
+
+/* ---- Scroll-driven motion (enhancement only) ---- */
+const preference=matchMedia('(prefers-reduced-motion: reduce)');
+let userPaused=false;try{userPaused=localStorage.getItem('leonida-motion')==='paused'}catch{}
+const motionButton=$('#motion'),story=$('.scroll-story'),copy=$('.story-copy'),
+  left=$('.curtain.left'),right=$('.curtain.right'),sky=$('.skyline');
+let paused=false,framePending=false;
+function updateScroll(){
+  framePending=false;
+  const y=window.scrollY,total=document.documentElement.scrollHeight-innerHeight;
+  $('.scroll-progress').style.transform=`scaleX(${total>0?y/total:0})`;
+  $('header').classList.toggle('scrolled',y>40);
+  $('#backtop').hidden=y<600;
+  if(paused)return;
+  const rect=story.getBoundingClientRect(),travel=Math.max(1,story.offsetHeight-innerHeight),
+    progress=Math.max(0,Math.min(1,-rect.top/travel)),open=Math.max(0,Math.min(1,progress*1.65));
+  left.style.transform=`translateX(${-open*105}%)`;
+  right.style.transform=`translateX(${open*105}%)`;
+  copy.style.opacity=String(Math.min(1,Math.max(0,(progress-.12)*3)));
+  copy.style.transform=`translateY(${(1-open)*45}px) scale(${.93+.07*open})`;
+  sky.style.transform=`translateY(${Math.min(y,innerHeight)*.15}px)`;
+  $('.story-hint').style.opacity=String(1-open);
+}
+function schedule(){if(!framePending){framePending=true;requestAnimationFrame(updateScroll)}}
+function applyMotion(){
+  paused=userPaused||preference.matches;
+  document.body.classList.toggle('motion-off',paused);
+  document.body.classList.toggle('motion-on',!paused);
+  motionButton.textContent=paused?'Motion paused':'Pause motion';
+  motionButton.setAttribute('aria-pressed',String(paused));
+  schedule();
+}
+motionButton.onclick=()=>{userPaused=!paused;try{localStorage.setItem('leonida-motion',userPaused?'paused':'enabled')}catch{}applyMotion()};
+preference.addEventListener('change',applyMotion);
+window.addEventListener('scroll',schedule,{passive:true});
+window.addEventListener('resize',schedule);
+$('#backtop').onclick=()=>window.scrollTo({top:0,behavior:paused?'instant':'smooth'});
+
+/* ---- Reveal on scroll + nav highlighting ---- */
+if('IntersectionObserver' in window){
+  const reveals=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');reveals.unobserve(e.target)}});
+  },{threshold:.08});
+  document.querySelectorAll('.heading,.card,.strip,.maplayout,.community').forEach((e,i)=>{
+    e.classList.add('reveal-item');e.style.setProperty('--delay',`${i%3*70}ms`);reveals.observe(e);
+  });
+  const sections=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){
+      document.querySelectorAll('nav a').forEach(a=>{
+        if(a.hash==='#'+e.target.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');
+      });
+    }});
+  },{rootMargin:'-20% 0px -55% 0px'});
+  document.querySelectorAll('section[id]:not(#reveal)').forEach(e=>sections.observe(e));
+}
+applyMotion();
+</script>
+</body>
+</html>
